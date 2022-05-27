@@ -58,14 +58,18 @@ class TextInputMask extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
-    try {
-      return TextEditingValue.fromJSON(magicMask.executeMasking(
+    try { 
+      final textEditingValueJson = magicMask.executeMasking(
           newValue.text,
           newValue.selection.baseOffset,
           reverse,
           maxLength,
           placeholder,
-          maxPlaceHolders));
+          maxPlaceHolders);
+      final overflow = textEditingValueJson['overflow'] ?? false;
+      return overflow
+          ? oldValue
+          : TextEditingValue.fromJSON(textEditingValueJson);
     } catch (e) {
       print(e);
     }
